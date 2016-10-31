@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>React Tutorial</title>
+    <!-- Not present in the tutorial. Just for basic styling. -->
+    <link rel="stylesheet" href="css/base.css" />
+    <style>
+
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
+
+.states-bundle {
+  fill: lightgray;
+  stroke: #fff;
+  stroke-width: 1.5px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.states-bundle:hover {
+  fill: lightsteelblue;
+}
+
+.states-codes {
+  text-anchor: middle;
+  font-size: 12pt;
+  fill: white;
+}
+
+</style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.8/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.8/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.16/browser.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
+  </head>
+  <body onload="initmap();">
+    <div class="center-grandparent">
+      <div class="center-parent">
+        <div class="center-child" id="container">
+          <script src="scripts/d3.v3.min.js"></script>
+          <script src="scripts/topojson.v1.min.js"></script>
+          <script>
+          
+          var width = 960,
+              height = 500;
+          
+          var path = d3.geo.path()
+              .projection(null);
+          
+          var id = "";
+          var picker = 0;
+          
+          var zoom = d3.behavior.zoom()
+              .translate([0, 0])
+              .scale(1)
+              .scaleExtent([1, 8])
+              .on("zoom", zoomed);
+          
+          var svg = d3.select("#container").append("svg")
+              .attr("width", width)
+              .attr("height", height);
+          
+          var features = svg.append("g");
+          
+          svg.append("rect")
+              .attr("class", "overlay")
+              .attr("width", width)
+              .attr("height", height)
+              .call(zoom);
+          
+          function initmap() {
+          
+            d3.json("us.json", function(error, us) {
+              if (error) throw error;
+          
+              var data = topojson.feature(us, us.objects.states).features;
+            
+              d3.tsv("us-state-names.tsv", function(tsv){
+                var codes = {};
+                tsv.forEach(function(d,i){
+                  codes[d.id] = d.code;
+                });
+          
+                features.append("g")
+                  .attr("class", "states-bundle")
+                  .selectAll("path")
+                  .data(data)
+                  .enter()
+                  .append("path")
+                  .attr("d", path)
+                  .attr("id", function(d) {
+                    id = d.id;
+                    return id;
+                  })
+                  .attr("class", "states");
+                
+                features.append("g")
+                  .attr("class", "states-codes")
+                  .selectAll("text")
+                  .data(data)
+                  .enter()
+                  .append("svg:text")
+                  .text(function(d){
+                    return codes[d.id];
+                  })
+                  .attr("x", function(d){
+                    return path.centroid(d)[0];
+                  })
+                  .attr("y", function(d){
+                    return  path.centroid(d)[1];
+                  });
+              });
+            });
+          }
+          
+          function zoomed() {
+            features.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+            features.select(".states-bundle").style("stroke-width", 1.5 / d3.event.scale + "px");
+            features.select(".states-codes").style("font-size", 12 / d3.event.scale + "pt");
+          }
+          
+          function politify(pick,usstate) {
+          
+            if (pick == undefined || usstate == undefined) {
+              var pick = Math.floor((Math.random() * 2));
+              var usstate = Math.floor((Math.random() * 56) + 1);
+            }
+            
+            features.selectAll("path")
+              .style("fill", function(d) {
+                if (d.id == usstate) {
+                  if ( pick == 1 ) {
+                    return "blue"
+                  } else {
+                    return "red"
+                  }
+                } else {
+                  return false
+                }
+              });
+          }
+          
+          d3.select(self.frameElement).style("height", height + "px");
+          
+          </script>
+        </div> <!-- child -->
+        <div class="center-child">
+          <div id="content"></div>
+          <script type="text/babel" src="scripts/polls.js"></script>
+        </div> <!-- child -->
+      </div> <!-- parent -->
+    </div> <!-- grandparent --
+  </body>
+</html>

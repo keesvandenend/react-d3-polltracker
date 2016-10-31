@@ -6,3 +6,6 @@
   Completely changed to create a dynamic polltracker.
   Current example is a random based poll simulating US presidential elections,
   but this structure could be adapted for any poll, for example using google adword ads.
+  
+  <img src="UnderConstruction.png"></img>
+

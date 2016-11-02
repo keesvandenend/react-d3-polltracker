@@ -2,8 +2,8 @@
 
  <b>In progress</b>
 
-  rewriting to ES6 syntax and using webpack
-  changing form and rendered poll to results bars
+  <li>rewriting to ES6 syntax and using webpack</li>
+  <li>changing form and rendered poll to results bars</li>
 
  <b>Description</b>
 

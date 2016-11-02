@@ -1,11 +1,11 @@
 # REACT-D3-POLLTRACKER
 
- in progress
+ <b>In progress</b>
 
   rewriting to ES6 syntax and using webpack
   changing form and rendered poll to results bars
 
- description
+ <b>Description</b>
 
   Based on react-tutorial, see initial facebook comment in script.
   Also based on the geoAlbers map for d3 and uses us.json and us-state-names.tsv.

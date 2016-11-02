@@ -3,6 +3,7 @@
  <b>In progress</b>
 
   <li>rewriting to ES6 syntax and using webpack</li>
+  <li>replacing Jquery ajax with Fetch</li>
   <li>changing form and rendered poll to results bars</li>
 
  <b>Description</b>
